@@ -9,53 +9,58 @@ const Intern = require('./lib/intern');
 //filename global constant
 const fileName = `./dist/index.html`;
 
-// An array of questions for user input on what actiont hey want to perform
+// An array of questions for user input on what action they want to perform
 const chooseAction = [
     {
         type: 'checkbox',
         message: 'Please select your action:',
         name: 'action',
-        choices: ['Add the team manager', 'Add an engineer', 'Add an intern', 'I am done'],
+        choices: ['Add an engineer', 'Add an intern', 'I am done'],
     }
 ]
 
+//common questions for all employees
 const getEmployeeInfo = [
     {
         type: 'input',
-        message: 'Please provide your name:',
+        message: 'Please provide the employee name:',
         name: 'empName',
     },
     {
         type: 'input',
-        message: 'Please provide your ID:',
+        message: 'Please provide the employee ID:',
         name: 'empId',
     },
     {
         type: 'input',
-        message: 'Please provide your email address:',
+        message: 'Please provide the employee email address:',
         name: 'empEmail',
     }
 ]
 
+//questions specific to a manager
 const getManagerInfo = [
     {
         type: 'input',
-        message: 'Please provide your office number:',
+        message: 'Please provide the employee office number:',
         name: 'empOffice',
     }
 ]
 
+//question specific to an engineer
 const getEngineerInfo = [
     {
         type: 'input',
-        message: 'Please provide your GitHub user name:',
+        message: 'Please provide the employee GitHub username:',
         name: 'empGithub',
     },
 ]
+
+//question specific to an intern
 const getInternInfo = [
     {
         type: 'input',
-        message: 'Please provide the name of your school:',
+        message: 'Please provide the employee name of your school:',
         name: 'empSchool',
     },
 ]
@@ -92,6 +97,23 @@ async function init() {
     let finish = false;
     let action;
 
+    console.log("Please start by providing the Team Manager's information before adding other team members:");
+    const questions = getEmployeeInfo.concat(getManagerInfo);
+
+    await inquirer
+        .prompt(questions)
+        .then((info) => {
+            console.log(info);
+
+            //create manager object
+            let manager = new Manager(info.empName, parseInt(info.empId), info.empEmail, parseInt(info.empOffice));
+
+            //create the  file
+            //writeToFile(manager);
+
+        }
+        );
+
     //get user's choice of action
     while (!finish) {
 
@@ -101,48 +123,41 @@ async function init() {
 
         console.log(action);
 
-        if(action == 'Add the team manager'){
-            const questions =  getEmployeeInfo.concat(getManagerInfo);
-            
-            await inquirer
-            .prompt(questions)
-            .then((infoData) => {
-                console.log(infoData);
+        if (action == 'Add an engineer') {
+            const questions = getEmployeeInfo.concat(getEngineerInfo);
 
-                //create the readme file
-                // writeToFile(response);
-
-            }
-            );
-        } else if (action == 'Add an engineer') {
-            const questions =  getEmployeeInfo.concat(getEngineerInfo);
-            
             await inquirer
                 .prompt(questions)
-                .then((infoData) => {
-                    console.log(infoData);
+                .then((info) => {
+                    console.log(info);
+
+                    //create Engineer object
+                    let engineer = new Engineer(info.empName, parseInt(info.empId), info.empEmail, info.empGithub);
 
                     //create the readme file
-                    // writeToFile(response);
+                    // writeToFile(engineer);
 
                 }
                 );
-            
-        }else if (action == 'Add an intern') {
-            const questions =  getEmployeeInfo.concat(getInternInfo);
-            
+
+        } else if (action == 'Add an intern') {
+            const questions = getEmployeeInfo.concat(getInternInfo);
+
             await inquirer
                 .prompt(questions)
-                .then((infoData) => {
-                    console.log(infoData);
+                .then((info) => {
+                    console.log(info);
+
+                     //create Intern object
+                     let intern = new Intern(info.empName, parseInt(info.empId), info.empEmail, info.empSchool);
 
                     //create the readme file
-                    // writeToFile(response);
+                    // writeToFile(intern);
 
                 }
                 );
-            
-        }else {
+
+        } else {
             finish = true;
             break;
         }
