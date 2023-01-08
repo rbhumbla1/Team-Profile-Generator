@@ -66,27 +66,6 @@ const getInternInfo = [
 ]
 
 
-// Function to write the HTML file
-// function writeToFile(empType, emp) {
-
-//     //create index.html file and add headers and content to it for manager
-//     if (empType === "manager") {
-//         fs.writeFileSync(fileName, createHTML(fileName, emp), (err) =>
-//             err ? console.log(err) : console.log('Success!')
-//         );
-//     } //append engineers and interns
-//     else if (empType === "engineer" || empType === "intern") {
-//         fs.appendFileSync(fileName, appendHTML(empType, emp), (err) =>
-//             err ? console.log(err) : console.log('Success!')
-//         );
-//     } else { //close the file 
-//         fs.appendFileSync(fileName, closeHTML(), (err) =>
-//             err ? console.log(err) : console.log('Success!')
-//         );
-//     }
-// }
-
-
 // Function to initialize app
 async function init() {
 
@@ -105,7 +84,6 @@ async function init() {
     await inquirer
         .prompt(questions)
         .then((info) => {
-            console.log(info);
 
             //create manager object
             let manager = new Manager(info.empName, parseInt(info.empId), info.empEmail, parseInt(info.empOffice));
@@ -120,10 +98,8 @@ async function init() {
     while (!finish) {
 
         let response = await inquirer.prompt(chooseAction);
-        console.log(response);
+        
         action = response.action;
-
-        console.log(action);
 
         if (action == 'Add an engineer') {
             const questions = getEmployeeInfo.concat(getEngineerInfo);
@@ -131,7 +107,6 @@ async function init() {
             await inquirer
                 .prompt(questions)
                 .then((info) => {
-                    console.log(info);
 
                     //create Engineer object
                     let engineer = new Engineer(info.empName, parseInt(info.empId), info.empEmail, info.empGithub);
@@ -148,8 +123,7 @@ async function init() {
             await inquirer
                 .prompt(questions)
                 .then((info) => {
-                    console.log(info);
-
+    
                     //create Intern object
                     let intern = new Intern(info.empName, parseInt(info.empId), info.empEmail, info.empSchool);
 
